@@ -16,9 +16,6 @@ class _IsAdminState extends State<IsAdmin> {
     return snapshot.docs;
   }
 
-  final isAdmin = currentUser!.admin;
-
-  final group = userDB.doc().collection('group').doc().get();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

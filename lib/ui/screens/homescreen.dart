@@ -28,7 +28,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isAuthenticated = false;
-  bool group = false;
   int _currentIndex = 0;
 
   @override
