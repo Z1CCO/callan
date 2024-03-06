@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "631999217749",
+    "project_id": "fir-fire-bbbbc",
+    "storage_bucket": "fir-fire-bbbbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631999217749:android:67af5db081b39c0a0d14dc",
+        "android_client_info": {
+          "package_name": "com.example.flutter_firebase_fire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631999217749-or3ehbakdh0co7s9m44cht9m47viabce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAavieXUJKzXrV8K5EnaTjL8ruEK0yLM5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631999217749-or3ehbakdh0co7s9m44cht9m47viabce.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "631999217749-bapd6a09gm7vuahp96ovucthl3faljl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterFirebaseFire"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
