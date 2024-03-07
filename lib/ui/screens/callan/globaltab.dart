@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_fire/domain/entity/user.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
@@ -14,14 +15,31 @@ class GlobalTab extends StatefulWidget {
 }
 
 class _GlobalTabState extends State<GlobalTab> {
+  late final Future? _future;
   final currentRank = currentUser?.score;
 
-  Future<List> getActivityuser() async {
-    final snapshot = await userDB.orderBy('score').limit(10).get();
-
-    return snapshot.docs;
+  @override
+  void initState() {
+    _future = getActivityuser();
+    super.initState();
   }
 
+  Future getActivityuser() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('score', descending: true)
+        .limit(10)
+        .get()
+        .then(
+          (value) => value.docs.forEach(
+            (element) {
+              highScore.add(element.reference.id);
+            },
+          ),
+        );
+  }
+
+  List<String> highScore = [];
   List top10 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
   @override
@@ -29,20 +47,13 @@ class _GlobalTabState extends State<GlobalTab> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: FutureBuilder(
-        future: getActivityuser(),
+        future: _future,
         builder: (context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          List users =
-              snapshot.data.map((doc) => User.fromDocument(doc)).toList();
           return ListView.builder(
-            itemCount: users.length,
+            itemCount: highScore.length,
             itemBuilder: (context, index) => GlobalTabItemWidget(
+              docID: highScore[index],
               rank: currentRank!.toString(),
-              user: users[index],
               reating: top10[index],
             ),
           );
@@ -53,15 +64,15 @@ class _GlobalTabState extends State<GlobalTab> {
 }
 
 class GlobalTabItemWidget extends StatefulWidget {
-  final User user;
   final String rank;
   final String reating;
+  final String docID;
 
   const GlobalTabItemWidget(
       {super.key,
-      required this.user,
       required this.rank,
-      required this.reating});
+      required this.reating,
+      required this.docID});
 
   @override
   State<GlobalTabItemWidget> createState() => _GlobalTabItemWidgetState();
@@ -76,78 +87,90 @@ class _GlobalTabItemWidgetState extends State<GlobalTabItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 8.0,
-        horizontal: 16.0,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.amber.shade800,
-            Colors.amber.shade500,
-            Colors.amber.shade200
-          ],
-        ),
-        border: Border.all(
-          color: Colors.black,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.grey,
-          backgroundImage: CachedNetworkImageProvider(widget.user.photoUrl),
-        ),
-        title: GestureDetector(
-          onTap: () => showProfile(context, widget.user.id),
-          child: RichText(
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              style: const TextStyle(fontSize: 18.0, color: Colors.black),
-              children: [
-                TextSpan(
-                  text: widget.user.username,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+    return FutureBuilder(
+      future: userDB.doc(widget.docID).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+
+          return Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 16.0,
             ),
-          ),
-        ),
-        subtitle: Row(
-          children: [
-            Text(
-              widget.user.score.toString(),
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(
-              width: 5.0,
-            ),
-            const Text(
-              'coin',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.amber.shade800,
+                  Colors.amber.shade500,
+                  Colors.amber.shade200
+                ],
               ),
-              overflow: TextOverflow.ellipsis,
+              border: Border.all(
+                color: Colors.black,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(15.0),
             ),
-          ],
-        ),
-        trailing: Container(
-          width: 40.0,
-          height: 40.0,
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Center(
-            child: Text(
-              widget.reating,
-              style: const TextStyle(fontSize: 20.0, color: Colors.white),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.grey,
+                backgroundImage: CachedNetworkImageProvider(data['photoUrl']),
+              ),
+              title: GestureDetector(
+                onTap: () => showProfile(context, widget.docID),
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: const TextStyle(fontSize: 18.0, color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: data['username'],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              subtitle: Row(
+                children: [
+                  Text(
+                    data['score'].toString(),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  const Text(
+                    'coin',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+              trailing: Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Center(
+                  child: Text(
+                    widget.reating,
+                    style: const TextStyle(fontSize: 20.0, color: Colors.white),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
