@@ -30,7 +30,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        User _user = User.fromDocument(snapshot.data);
+        User user = User.fromDocument(snapshot.data);
         return Stack(
           children: [
             Container(
@@ -91,7 +91,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                       radius: 40.0,
                       backgroundColor: Colors.grey,
                       backgroundImage:
-                          CachedNetworkImageProvider(_user.photoUrl),
+                          CachedNetworkImageProvider(user.photoUrl),
                     ),
                   ),
                 ],
@@ -149,7 +149,7 @@ class ProfileHeaderWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  _user.username,
+                  user.username,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 23.0,
@@ -172,7 +172,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Text(
-                          _user.displayName,
+                          user.displayName,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 17.0),
                         ),
@@ -182,7 +182,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17.0),
                       ),
-                      if (_user.boi.isNotEmpty) Text(_user.boi)
+                      if (user.boi.isNotEmpty) Text(user.boi)
                     ],
                   ),
                 ),

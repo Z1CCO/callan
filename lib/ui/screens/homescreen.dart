@@ -15,7 +15,7 @@ final commentDB = FirebaseFirestore.instance.collection('comments');
 final activityDB = FirebaseFirestore.instance.collection('feed');
 final followersDB = FirebaseFirestore.instance.collection('followers');
 final followingDB = FirebaseFirestore.instance.collection('following');
-final groupDB = FirebaseFirestore.instance.collection('group');
+final chatDB = FirebaseFirestore.instance.collection('chat');
 
 User? currentUser;
 
@@ -69,9 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final username = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (contaxt) => CreateUser(
-              user: user.id,
-            ),
+            builder: (contaxt) => CreateUser(),
           ),
         );
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
@@ -13,7 +14,7 @@ import 'package:uuid/uuid.dart';
 
 class UploadImage extends StatefulWidget {
   final User? currentUser;
-  const UploadImage({super.key, this.currentUser});
+  const UploadImage({super.key, required this.currentUser});
 
   @override
   State<UploadImage> createState() => _UploadImageState();
@@ -291,19 +292,22 @@ class UploadGetImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.blue),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
-              height: 40.0,
-            ),
             const SizedBox(
               width: double.infinity,
               height: 350.0,
               child: Image(
                 image: AssetImage('assets/images/upload.jpg'),
               ),
+            ),
+            const SizedBox(
+              height: 30.0,
             ),
             ElevatedButton.icon(
               style: const ButtonStyle(
@@ -319,9 +323,6 @@ class UploadGetImage extends StatelessWidget {
                 'Rasm Yuklash',
                 style: TextStyle(color: Colors.white, fontSize: 22),
               ),
-            ),
-            const SizedBox(
-              height: 40.0,
             ),
           ],
         ),

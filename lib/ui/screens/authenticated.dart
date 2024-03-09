@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_fire/ui/screens/callan/callan.dart';
+import 'package:flutter_firebase_fire/ui/screens/chats/chat.dart';
 import 'package:flutter_firebase_fire/ui/screens/home/homedart.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
-import 'package:flutter_firebase_fire/ui/widgets/posts_list/2me.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'profile/profile_screen.dart';
-import 'search/search.dart';
 
 class Authenticated extends StatelessWidget {
   final int currentIndex;
@@ -14,11 +13,7 @@ class Authenticated extends StatelessWidget {
   Authenticated({super.key, required this.currentIndex, required this.onTap});
   final _screens = [
     Home(profileId: currentUser!.id),
-    UploadImage(
-      currentUser: currentUser,
-    ),
-    Callan(profileId: currentUser!.id),
-    const Search(),
+    ChatScreen(),
     ProfileScreen(
       profileId: currentUser!.id,
     ),
@@ -50,100 +45,35 @@ class cupertinoNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabBar(
-      height: 80,
-      backgroundColor: Colors.blue.shade700,
-      iconSize: 35.0,
-      currentIndex: currentIndex,
-      onTap: onTap,
-      items: const [
-        BottomNavigationBarItem(
-            activeIcon: CircularCont(
-              icon: Icon(
-                Icons.local_fire_department_sharp,
-                color: Colors.black,
-              ),
-            ),
-            icon: Icon(
-              Icons.local_fire_department_outlined,
-              color: Colors.white,
-            ),
-            label: ''),
-        BottomNavigationBarItem(
-            activeIcon: CircularCont(
-              icon: Icon(
-                Icons.photo_camera_rounded,
-                color: Colors.black,
-              ),
-            ),
-            icon: Icon(
-              Icons.photo_camera_outlined,
-              color: Colors.white,
-            ),
-            label: ''),
-        BottomNavigationBarItem(
-            activeIcon: CircularCont(
-              icon: Image(
-                width: 50,
-                height: 50,
-                color: Colors.black,
-                image: AssetImage('assets/images/callan2.png'),
-              ),
-            ),
-            icon: Image(
-              width: 40,
-              height: 40,
-              color: Colors.white,
-              image: AssetImage('assets/images/callan2.png'),
-            ),
-            label: ''),
-        BottomNavigationBarItem(
-            activeIcon: CircularCont(
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            label: ''),
-        BottomNavigationBarItem(
-            activeIcon: CircularCont(
-              icon: Icon(
-                Icons.account_circle,
-                color: Colors.black,
-              ),
-            ),
-            icon: Icon(
-              Icons.account_circle_outlined,
-              color: Colors.white,
-            ),
-            label: ''),
+    return GNav(
+      tabBackgroundGradient: const LinearGradient(
+        colors: [Colors.grey, Colors.black],
+      ),
+      color: Colors.black,
+      curve: Curves.bounceIn,
+      backgroundColor: Colors.transparent,
+      iconSize: 24.0,
+      selectedIndex: currentIndex,
+      onTabChange: onTap,
+      activeColor: Colors.white,
+      tabBorder: Border.all(color: Colors.grey, width: 1),
+      tabMargin: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(15),
+      gap: 35,
+      tabs: const [
+        GButton(
+          icon: Icons.home_filled,
+          text: 'Home',
+        ),
+        GButton(
+          icon: Icons.chat,
+          text: 'Chat',
+        ),
+        GButton(
+          icon: Icons.account_circle_outlined,
+          text: 'Profile',
+        ),
       ],
-    );
-  }
-}
-
-class CircularCont extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final icon;
-  const CircularCont({super.key, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 5),
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.amber,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Center(
-        child: icon,
-      ),
     );
   }
 }

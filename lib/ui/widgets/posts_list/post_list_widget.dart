@@ -33,8 +33,8 @@ class _PostListWidgetState extends State<PostListWidget> {
   }
 
   void handleLikePost() {
-    bool _isLiked = widget.post.likes[currentUserId] ?? false;
-    if (_isLiked) {
+    bool isLiked = widget.post.likes[currentUserId] ?? false;
+    if (isLiked) {
       postDB
           .doc(widget.post.ownerId)
           .collection('userPosts')

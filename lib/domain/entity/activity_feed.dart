@@ -29,6 +29,7 @@ class ActivityFeed {
       type: doc['type'],
       mediaUrl: doc['mediaUrl'],
       userAvatar: doc['userAvatar'],
+      // ignore: unnecessary_null_in_if_null_operators
       commentData: doc['commentData'] ?? null,
       timestamp: doc['timestamp'],
     );

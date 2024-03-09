@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
+// ignore: camel_case_types
 class unAuthenticated extends StatelessWidget {
   final VoidCallback onTap;
   const unAuthenticated({super.key, required this.onTap});

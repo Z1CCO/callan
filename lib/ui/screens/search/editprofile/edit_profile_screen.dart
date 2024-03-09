@@ -37,6 +37,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => isLoading = false);
   }
 
+  // ignore: non_constant_identifier_names
   void UpdateProfile() {
     _displayErrorText = null;
     _bioErrorText = null;
@@ -82,6 +83,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void logOut() async {
     await googleSignIn.signOut();
+    // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

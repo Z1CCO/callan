@@ -20,6 +20,7 @@ class _SearchState extends State<Search> {
       queryFirstLatter,
       queryFirstLatter.toUpperCase(),
     );
+    // ignore: no_leading_underscores_for_local_identifiers
     Future<QuerySnapshot> _users =
         userDB.where('displayName', isGreaterThanOrEqualTo: query).get();
 

@@ -17,13 +17,14 @@ dependencies:
   firebase_storage: ^11.5.0
   connectivity_plus: ^5.0.2
   cloud_firestore: ^4.13.0
+  dropdown_button2: ^2.3.9
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.2.1
   firebase_auth: ^4.13.0
   firebase_core: ^2.22.0
   google_sign_in: ^6.1.6
+  google_nav_bar: ^5.0.6
   path_provider: ^2.1.1
-  dropdown_button2: ^2.3.9
   image_picker: ^1.0.5
   url_launcher: ^6.2.5
   geolocator: ^10.1.0

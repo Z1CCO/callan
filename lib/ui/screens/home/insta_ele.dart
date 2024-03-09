@@ -40,8 +40,7 @@ class InastaTele extends StatelessWidget {
                             child: Column(
                               children: [
                                 Image(
-                                  image: AssetImage(
-                                      'assets/images/transparent.png'),
+                                  image: AssetImage(''),
                                 ),
                               ],
                             ),
@@ -121,7 +120,7 @@ class InastaTele extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
+              const Text(
                 '@Callan_education',
                 style: TextStyle(fontSize: 22.0),
               )

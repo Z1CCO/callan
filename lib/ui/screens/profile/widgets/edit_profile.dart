@@ -21,6 +21,7 @@ class EditProfileButtonWidget extends StatelessWidget {
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           backgroundColor: isFollowing ? Colors.white : Colors.blue,
+          // ignore: deprecated_member_use
           primary: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),

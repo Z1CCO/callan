@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
 
 // ignore: must_be_immutable
 class CreateUser extends StatefulWidget {
-  String? user;
-
-  CreateUser({
+  const CreateUser({
     super.key,
-    required this.user,
   });
 
   @override
@@ -31,12 +27,6 @@ class _CreateUserState extends State<CreateUser> {
     'Web daturlash',
   ];
   void onSubmit() {
-    userDB
-        .doc(widget.user)
-        .collection('group')
-        .doc(widget.user)
-        .set({'group': selectedValue});
-
     final form = _formKey.currentState;
     if (form!.validate()) {
       FocusScope.of(context).unfocus();
