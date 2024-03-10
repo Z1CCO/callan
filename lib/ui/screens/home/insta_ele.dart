@@ -40,7 +40,7 @@ class InastaTele extends StatelessWidget {
                             child: Column(
                               children: [
                                 Image(
-                                  image: AssetImage(''),
+                                  image: AssetImage('assets/images/insta.png'),
                                 ),
                               ],
                             ),
@@ -77,55 +77,26 @@ class InastaTele extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 8.0),
-        width: double.infinity,
-        height: 55,
+        width: 110,
+        height: 110,
+        margin: const EdgeInsets.only(
+            left: 15.0, right: 15.0, bottom: 15.0, top: 6.0),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade200,
-              Colors.blue.shade200,
-              Colors.yellow.shade800,
-              Colors.yellow.shade800,
-            ],
-          ),
-          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.indigoAccent.shade700,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(3, 3),
+              blurRadius: 6,
+              spreadRadius: 3,
+            ),
+          ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-          child: Row(
-            children: [
-              Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  image: const DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/images/transparent.png'),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(5),
-                width: 55,
-                height: 55,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  image: const DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/images/tele.webp'),
-                  ),
-                ),
-              ),
-              const Text(
-                '@Callan_education',
-                style: TextStyle(fontSize: 22.0),
-              )
-            ],
-          ),
+        child: const Icon(
+          Icons.share,
+          size: 65.0,
+          color: Colors.white,
         ),
       ),
     );

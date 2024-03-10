@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_fire/ui/screens/chats/chat.dart';
 import 'package:flutter_firebase_fire/ui/screens/home/homedart.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'profile/profile_screen.dart';
 
 class Authenticated extends StatelessWidget {
@@ -24,9 +23,12 @@ class Authenticated extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: _screens.elementAt(currentIndex),
-      bottomNavigationBar: cupertinoNavBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: cupertinoNavBar(
+          currentIndex: currentIndex,
+          onTap: onTap,
+        ),
       ),
     );
   }
@@ -45,33 +47,86 @@ class cupertinoNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GNav(
-      tabBackgroundGradient: const LinearGradient(
-        colors: [Colors.grey, Colors.black],
-      ),
-      color: Colors.black,
-      curve: Curves.bounceIn,
+    return CupertinoTabBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
       backgroundColor: Colors.transparent,
-      iconSize: 24.0,
-      selectedIndex: currentIndex,
-      onTabChange: onTap,
       activeColor: Colors.white,
-      tabBorder: Border.all(color: Colors.grey, width: 1),
-      tabMargin: const EdgeInsets.all(18),
-      padding: const EdgeInsets.all(15),
-      gap: 35,
-      tabs: const [
-        GButton(
-          icon: Icons.home_filled,
-          text: 'Home',
+      items: [
+        BottomNavigationBarItem(
+          activeIcon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(
+                12,
+              ),
+            ),
+            width: 80,
+            height: 50,
+            child: Image.asset(
+              'assets/images/home.png',
+              color: Colors.white,
+            ),
+          ),
+          icon: SizedBox(
+            width: 33,
+            height: 33,
+            child: Image.asset(
+              'assets/images/home.png',
+              color: Colors.black,
+            ),
+          ),
         ),
-        GButton(
-          icon: Icons.chat,
-          text: 'Chat',
+        BottomNavigationBarItem(
+          activeIcon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(
+                12,
+              ),
+            ),
+            width: 80,
+            height: 50,
+            child: Image.asset(
+              'assets/images/chatt.png',
+              color: Colors.white,
+            ),
+          ),
+          icon: SizedBox(
+            width: 33,
+            height: 33,
+            child: Image.asset(
+              'assets/images/chatt.png',
+              color: Colors.black,
+            ),
+          ),
         ),
-        GButton(
-          icon: Icons.account_circle_outlined,
-          text: 'Profile',
+        BottomNavigationBarItem(
+          activeIcon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(
+                12,
+              ),
+            ),
+            width: 80,
+            height: 50,
+            child: Image.asset(
+              'assets/images/callan2.png',
+              color: Colors.white,
+            ),
+          ),
+          icon: SizedBox(
+            width: 33,
+            height: 33,
+            child: Image.asset(
+              'assets/images/callan2.png',
+              color: Colors.black,
+            ),
+          ),
         ),
       ],
     );

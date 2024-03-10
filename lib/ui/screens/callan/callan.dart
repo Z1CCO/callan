@@ -18,7 +18,7 @@ class _CallanState extends State<Callan> {
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage('assets/images/bac.jpg'),
+          image: AssetImage('assets/images/bakkk.jpg'),
         ),
       ),
       child: Scaffold(

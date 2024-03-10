@@ -188,7 +188,7 @@ class _GlobalTabItemWidgetState extends State<GlobalTabItemWidget> {
               ),
               const Divider(
                 height: 0,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ],
           );

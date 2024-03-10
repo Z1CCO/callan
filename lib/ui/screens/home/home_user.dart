@@ -27,16 +27,7 @@ class _HomeUserState extends State<HomeUser> {
         User user = User.fromDocument(snapshot.data);
         return Container(
           height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.grey,
-                Colors.white,
-              ],
-            ),
-          ),
+          decoration: const BoxDecoration(color: Colors.white),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: HomeBody(user: user, isAdmin: isAdmin),

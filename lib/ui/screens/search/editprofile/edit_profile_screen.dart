@@ -31,7 +31,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final doc = await userDB.doc(widget.currentUserId).get();
     _user = User.fromDocument(doc);
-    _displayNameController.text = _user.displayName;
+    _displayNameController.text = _user.username;
     _bioController.text = _user.boi;
 
     setState(() => isLoading = false);
@@ -42,19 +42,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _displayErrorText = null;
     _bioErrorText = null;
     final String displayName = _displayNameController.text.trim();
-    final String bio = _bioController.text.trim();
     if (displayName.length < 3 || displayName.isEmpty) {
       _displayErrorText = 'Ko\'rsatilgan nom qisqa';
     }
-    if (bio.length > 100) {
-      _bioErrorText = 'ma\'lumot juda uzun';
-    }
+
     setState(() {});
     if (_displayErrorText == null && _bioErrorText == null) {
       userDB.doc(widget.currentUserId).update(
         {
-          'displayName': displayName,
-          'bio': bio,
+          'username': displayName,
         },
       );
       Navigator.pop(context, true);
@@ -163,26 +159,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         const SizedBox(
                           height: 10.0,
-                        ),
-                        TextField(
-                          controller: _bioController,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16.0,
-                          ),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 2.0),
-                              ),
-                              labelText: 'Men haqimda',
-                              labelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14.0,
-                              ),
-                              border: const OutlineInputBorder(),
-                              isDense: true,
-                              errorText: _bioErrorText),
                         ),
                       ],
                     ),
