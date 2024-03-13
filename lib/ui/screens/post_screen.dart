@@ -19,17 +19,13 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   String posrDescription = '';
   bool isLoading = false;
-  late Post post;
+  Post? post;
 
   void getPost() async {
     setState(() => isLoading = true);
-    var data = await postDB
-        .doc(widget.userId)
-        .collection('userPosts')
-        .doc(widget.postId)
-        .get();
+    var data = await postDB.doc(post!.postId).get();
     post = Post.fromDocument(data);
-    posrDescription = post.description;
+    posrDescription = post!.description;
     setState(() => isLoading = false);
   }
 
@@ -45,7 +41,7 @@ class _PostScreenState extends State<PostScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 60.0,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.black,
         iconTheme: const IconThemeData(
           size: 25.0,
           color: Colors.white,
@@ -56,13 +52,9 @@ class _PostScreenState extends State<PostScreen> {
           style: const TextStyle(color: Colors.white, fontSize: 25.0),
         ),
       ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: PostListWidget(post: post),
-            ),
+      body: SingleChildScrollView(
+        child: PostListWidget(post: post!),
+      ),
     );
   }
 }

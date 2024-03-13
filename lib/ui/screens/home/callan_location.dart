@@ -13,8 +13,8 @@ class CallanLocation extends StatelessWidget {
         MapUtils.openMap(40.53436, 70.94689);
       },
       child: Container(
-        width: 110,
-        height: 110,
+        width: 70,
+        height: 70,
         margin: const EdgeInsets.only(
             left: 15.0, right: 15.0, bottom: 15.0, top: 6.0),
         decoration: BoxDecoration(
@@ -31,7 +31,7 @@ class CallanLocation extends StatelessWidget {
         ),
         child: const Icon(
           Icons.location_pin,
-          size: 65.0,
+          size: 55.0,
           color: Colors.white,
         ),
       ),

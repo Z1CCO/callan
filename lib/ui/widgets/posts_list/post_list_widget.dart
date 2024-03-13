@@ -6,6 +6,7 @@ import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
 import 'package:flutter_firebase_fire/ui/widgets/cachednetworkimagewidget.dart';
 import 'package:flutter_firebase_fire/ui/widgets/posts_list/post_footer_widget.dart';
 import 'package:flutter_firebase_fire/ui/widgets/posts_list/post_header_widgrt.dart';
+import 'package:flutter_firebase_fire/ui/widgets/posts_list/upload_image.dart';
 
 class PostListWidget extends StatefulWidget {
   final Post post;
@@ -35,22 +36,14 @@ class _PostListWidgetState extends State<PostListWidget> {
   void handleLikePost() {
     bool isLiked = widget.post.likes[currentUserId] ?? false;
     if (isLiked) {
-      postDB
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({'likes.$currentUserId': false});
+      postDB.doc(postId).update({'likes.$currentUserId': false});
       activityFeedAction('delete');
       likesCount -= 1;
       isLiked = false;
       widget.post.likes[currentUserId] = false;
       setState(() {});
     } else {
-      postDB
-          .doc(widget.post.ownerId)
-          .collection('userPosts')
-          .doc(widget.post.postId)
-          .update({'likes.$currentUserId': true});
+      postDB.doc(postId).update({'likes.$currentUserId': true});
       showHeart = true;
       activityFeedAction('like');
       likesCount += 1;
@@ -102,7 +95,6 @@ class _PostListWidgetState extends State<PostListWidget> {
       children: [
         PostHeaderWidget(
           postId: widget.post,
-          location: widget.post.location,
           ownerId: widget.post.ownerId,
         ),
         GestureDetector(

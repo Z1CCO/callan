@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
 
 // ignore: must_be_immutable
 class CreateUser extends StatefulWidget {
@@ -15,7 +16,6 @@ class CreateUser extends StatefulWidget {
 class _CreateUserState extends State<CreateUser> {
   final _formKey = GlobalKey<FormState>();
   String? username;
-  String? selectedValue;
 
   final List<String> items = [
     'Ingliz tili',

@@ -6,11 +6,11 @@ import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_fire/domain/entity/user.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+
+String postId = const Uuid().v4();
 
 class UploadImage extends StatefulWidget {
   final User? currentUser;
@@ -22,12 +22,10 @@ class UploadImage extends StatefulWidget {
 
 class _UploadImageState extends State<UploadImage> {
   File? imageFile;
-  final _locationController = TextEditingController();
   final _captionController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   bool isUploading = false;
   bool icLoading = false;
-  String postId = const Uuid().v4();
 
   void handleTakePhoto(BuildContext context) async {
     Navigator.pop(context);
@@ -77,19 +75,6 @@ class _UploadImageState extends State<UploadImage> {
 
   void clearImage() => setState(() => imageFile = null);
 
-  void getUserLocation() async {
-    setState(() => icLoading = true);
-    final location = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(location.latitude, location.longitude);
-    final placemark = placemarks.first;
-    final formatedAdress = '${placemark.locality},${placemark.country}';
-    _locationController.text = formatedAdress;
-    icLoading = false;
-    setState(() {});
-  }
-
   Future<void> compressImage() async {
     final file = await imageFile!.readAsBytes();
     final tempDir = await getTemporaryDirectory();
@@ -116,10 +101,7 @@ class _UploadImageState extends State<UploadImage> {
     String mediaUrl = await uploadImage(imageFile);
 
     createPostInFirestore(
-        mediaUrl: mediaUrl,
-        location: _locationController.text,
-        description: _captionController.text);
-    _locationController.clear();
+        mediaUrl: mediaUrl, description: _captionController.text);
     _captionController.clear();
     imageFile = null;
     isUploading = false;
@@ -129,15 +111,13 @@ class _UploadImageState extends State<UploadImage> {
 
   createPostInFirestore({
     required String mediaUrl,
-    required String location,
     required String description,
   }) {
-    postDB.doc(currentUser!.id).collection('userPosts').doc(postId).set({
+    postDB.doc(postId).set({
       'postId': postId,
       'ownerId': currentUser!.id,
       'username': currentUser!.username,
       'description': description,
-      'location': location,
       'mediaUrl': mediaUrl,
       'timestamp': DateTime.now(),
       'likes': {},
@@ -222,61 +202,9 @@ class _UploadImageState extends State<UploadImage> {
                   const Divider(
                     color: Colors.black,
                   ),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.pin_drop,
-                      color: Colors.blue,
-                      size: 38.0,
-                    ),
-                    title: SizedBox(
-                      width: 250.0,
-                      child: TextField(
-                        controller: _locationController,
-                        decoration: const InputDecoration(
-                          hintText: "Joylashuv",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
                   const SizedBox(
                     height: 20.0,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 55.0,
-                      child: ElevatedButton.icon(
-                        style: ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(9),
-                            ),
-                          ),
-                          backgroundColor:
-                              const MaterialStatePropertyAll(Colors.blue),
-                        ),
-                        onPressed: getUserLocation,
-                        icon: icLoading
-                            ? const Text('')
-                            : const Icon(
-                                Icons.my_location,
-                                size: 30.0,
-                                color: Colors.white,
-                              ),
-                        label: icLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : const Text(
-                                'Hozirgi Joylashuv',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 24),
-                              ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),

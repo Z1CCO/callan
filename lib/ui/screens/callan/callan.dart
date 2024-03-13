@@ -15,15 +15,15 @@ class _CallanState extends State<Callan> {
   Widget build(BuildContext context) {
     return Container(
       height: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage('assets/images/bakkk.jpg'),
         ),
       ),
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: Colors.transparent,
-        body: const GlobalTab(),
+        body: GlobalTab(),
       ),
     );
   }

@@ -9,12 +9,10 @@ import '../../screens/homescreen.dart';
 class PostHeaderWidget extends StatelessWidget {
   const PostHeaderWidget({
     super.key,
-    required this.location,
     required this.ownerId,
     required this.postId,
   });
   final Post postId;
-  final String location;
   final String ownerId;
 
   handlePostDelete(BuildContext context) {
@@ -44,12 +42,7 @@ class PostHeaderWidget extends StatelessWidget {
   }
 
   void deletePost() async {
-    postDB
-        .doc(ownerId)
-        .collection('userPosts')
-        .doc(postId.postId)
-        .get()
-        .then((doc) {
+    postDB.doc(postId.postId).get().then((doc) {
       if (doc.exists) {
         doc.reference.delete();
       }
@@ -101,7 +94,6 @@ class PostHeaderWidget extends StatelessWidget {
               ),
             ),
           ),
-          subtitle: Text(location),
           trailing: isPostOwner
               ? IconButton(
                   icon: const Icon(Icons.more_vert),

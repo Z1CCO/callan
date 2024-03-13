@@ -1,12 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_fire/ui/screens/activity/activity_feed_screen.dart';
+import 'package:flutter_firebase_fire/ui/screens/home/edit_profile.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
-import 'package:flutter_firebase_fire/ui/screens/profile/widgets/edit_profile.dart';
-import 'package:flutter_firebase_fire/ui/screens/profile/widgets/profile_list_widget.dart';
-import '../../../domain/entity/post.dart';
-import '../search/editprofile/edit_profile_screen.dart';
-import 'widgets/profile_header_widget.dart';
+import 'package:flutter_firebase_fire/ui/screens/profile/profile_floating.dart';
+import 'package:flutter_firebase_fire/util/show_post.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String profileId;
@@ -21,246 +19,114 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final currentUserId = currentUser?.id;
-  late Future<DocumentSnapshot<Map<String, dynamic>>> _future;
-  bool isLoading = false;
-  late bool isFollowing;
-  bool isFollowLoading = false;
-  bool isPostOrientationGrid = true;
-  int _postCount = 0;
-  int _followersCount = 0;
-  int _followingCount = 0;
-  List<Post> posts = [];
+  late final Future? _future;
 
   @override
   void initState() {
+    _future = getActivityuser();
     super.initState();
-    _future = userDB.doc(widget.profileId).get();
-    getProfilepost();
-    getFollowersAndFollowing();
-    checkFollowing();
   }
 
-  void checkFollowing() async {
-    final followerDoc = await followersDB
-        .doc(widget.profileId)
-        .collection('userFollowers')
-        .doc(currentUserId)
-        .get();
-    isFollowing = followerDoc.exists;
-    setState(() {});
-  }
-
-  void getFollowersAndFollowing() async {
-    final followers = await followersDB
-        .doc(widget.profileId)
-        .collection('userFollowers')
-        .get();
-
-    final follwings = await followingDB
-        .doc(widget.profileId)
-        .collection('userFollowing')
-        .get();
-
-    _followersCount = followers.docs.length;
-    _followingCount = follwings.docs.length;
-    setState(() {});
-  }
-
-  buildProfileButton() {
-    final isProfileOwner = currentUserId == widget.profileId;
-
-    if (isProfileOwner) {
-      return EditProfileButtonWidget(
-        isFollowing: isFollowing,
-        title: 'Profilni tahrirlash',
-        onPressed: editProfile,
-      );
-    }
-    return EditProfileButtonWidget(
-      isFollowing: isFollowing,
-      title: isFollowing ? 'unfollow' : 'follow',
-      onPressed: handleFollowingToggle,
-      isFollowLoading: isFollowLoading,
-    );
-  }
-
-  buildNavigatorPop() {
-    final isProfileOwner = currentUserId == widget.profileId;
-
-    if (isProfileOwner) {
-      return null;
-    }
-    return IconButton(
-      icon: const Icon(Icons.arrow_back, color: Colors.white),
-      onPressed: () => Navigator.of(context).pop(),
-    );
-  }
-
-  Widget natificationUser() {
-    final isProfileOwner = currentUserId == widget.profileId;
-    if (isProfileOwner) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: IconButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ActivityFeedScreen()),
+  Future getActivityuser() async {
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy(
+          'postId',
+        )
+        .limit(1000)
+        .get()
+        .then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (value) => value.docs.forEach(
+            (element) {
+              posts.add(element.reference.id);
+            },
           ),
-          icon: const Icon(
-            Icons.notifications_on_sharp,
-            size: 30.0,
-            color: Colors.white,
-          ),
-        ),
-      );
-    }
-    return const Text('');
+        );
   }
 
-  void handleFollowingToggle() async {
-    setState(() => isFollowLoading = true);
-    final followersDoc = followersDB
-        .doc(widget.profileId)
-        .collection('userFollowers')
-        .doc(currentUserId);
-    final followingDoc = followingDB
-        .doc(currentUserId)
-        .collection('userFollowing')
-        .doc(widget.profileId);
-    final activityDoc = activityDB
-        .doc(widget.profileId)
-        .collection('feedItems')
-        .doc(currentUserId);
-
-    if (isFollowing) {
-      final docs = [followersDoc, followingDoc, activityDoc];
-      for (var doc in docs) {
-        var data = await doc.get();
-        if (data.exists) await data.reference.delete();
-      }
-    } else {
-      followersDoc.set({
-        'ownerId': widget.profileId,
-        'username': currentUser!.username,
-        'userId': currentUserId,
-        'userAvatar': currentUser!.photoUrl,
-        'timestamp': DateTime.now(),
-      });
-      followingDoc.set({
-        'ownerId': widget.profileId,
-        'username': currentUser!.username,
-        'userId': currentUserId,
-        'userAvatar': currentUser!.photoUrl,
-        'timestamp': DateTime.now(),
-      });
-      activityDoc.set({
-        'type': 'follow',
-        'ownerId': widget.profileId,
-        'username': currentUser!.username,
-        'userId': currentUserId,
-        'userAvatar': currentUser!.photoUrl,
-        'postId': '',
-        'mediaUrl': '',
-        'timestamp': DateTime.now(),
-        'commentData': '',
-      });
-    }
-    isFollowing = !isFollowing;
-    isFollowLoading = false;
-    getFollowersAndFollowing();
-  }
-
-  getProfilepost() async {
-    setState(() => isLoading = true);
-    final snapshot = await postDB
-        .doc(widget.profileId)
-        .collection('userPosts')
-        .orderBy('timestamp', descending: true)
-        .get();
-
-    isLoading = false;
-    _postCount = snapshot.docs.length;
-    posts = snapshot.docs.map((e) => Post.fromDocument(e)).toList();
-    setState(() {});
-  }
-
-  editProfile() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProfileScreen(
-          currentUserId: currentUserId!,
-        ),
-      ),
-    );
-    if (result) {
-      _future = userDB.doc(widget.profileId).get();
-      setState(() {});
-    }
-  }
-
-  void togglePostOrientation() {
-    isPostOrientationGrid = !isPostOrientationGrid;
-    setState(() {});
-  }
-
-  void nulllll() {}
+  List<String> posts = [];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: buildNavigatorPop(),
-        backgroundColor: Colors.blue,
-        title: const Text(
-          'Profil',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 25.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        actions: [natificationUser()],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProfileHeaderWidget(
-                followersCount: _followersCount,
-                followingCount: _followingCount,
-                future: _future,
-                buildButton: buildProfileButton,
-                postCount: _postCount),
-            const SizedBox(height: 5.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed:
-                      isPostOrientationGrid ? nulllll : togglePostOrientation,
-                  icon: Icon(
-                    Icons.grid_on,
-                    color: isPostOrientationGrid ? Colors.black : Colors.grey,
-                  ),
+    return FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              leading: const Padding(
+                padding: EdgeInsets.only(left: 15.0),
+                child: Image(
+                  image: AssetImage('assets/images/callan2.png'),
                 ),
+              ),
+              title: const Text('Callan Education'),
+              actions: [
                 IconButton(
-                  onPressed:
-                      !isPostOrientationGrid ? nulllll : togglePostOrientation,
-                  icon: Icon(
-                    Icons.list,
-                    color: !isPostOrientationGrid ? Colors.black : Colors.grey,
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfileScreen(),
+                    ),
                   ),
+                  icon: const Icon(Icons.settings),
                 ),
               ],
             ),
-            ProfilePostsWidget(
-                posts: posts, isPostOrientationGrid: isPostOrientationGrid)
-          ],
-        ),
-      ),
-    );
+            backgroundColor: Colors.white,
+            body: GridView.builder(
+              itemCount: posts.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, crossAxisSpacing: 2, mainAxisSpacing: 2),
+              itemBuilder: (BuildContext context, int index) =>
+                  Profile_Grid_Item(
+                id: posts[index],
+              ),
+            ),
+            floatingActionButton: const ProfileFloat(),
+          );
+        });
+  }
+}
+
+// ignore: camel_case_types
+class Profile_Grid_Item extends StatelessWidget {
+  final String id;
+  const Profile_Grid_Item({required this.id, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: postDB.doc(id).get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            return GestureDetector(
+              onTap: () {
+                showPost(
+                  context,
+                  data['postId'],
+                  data['ownerId'],
+                  data['description'],
+                  data['mediaUrl'],
+                );
+              },
+              child: CachedNetworkImage(
+                imageUrl: data['mediaUrl'],
+                fit: BoxFit.cover,
+              ),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
   }
 }

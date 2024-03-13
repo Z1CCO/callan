@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_fire/domain/entity/user.dart';
-import 'package:flutter_firebase_fire/ui/screens/activity/isadmin_user.dart';
+import 'package:flutter_firebase_fire/ui/screens/activity/all_users.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
 
 class IsAdmin extends StatefulWidget {
@@ -12,7 +13,10 @@ class IsAdmin extends StatefulWidget {
 
 class _IsAdminState extends State<IsAdmin> {
   Future<List> getActivityuser() async {
-    final snapshot = await userDB.get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('group')
+        .get();
     return snapshot.docs;
   }
 
@@ -20,14 +24,15 @@ class _IsAdminState extends State<IsAdmin> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getActivityuser(),
-      builder: (context, AsyncSnapshot snapshot) {
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        List users =
+        List<dynamic> users =
             snapshot.data.map((doc) => User.fromDocument(doc)).toList();
+
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(

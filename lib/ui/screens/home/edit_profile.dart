@@ -5,8 +5,9 @@ import 'package:flutter_firebase_fire/domain/entity/user.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  final String currentUserId;
-  const EditProfileScreen({super.key, required this.currentUserId});
+  const EditProfileScreen({
+    super.key,
+  });
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -14,7 +15,6 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _displayNameController = TextEditingController();
-  final _bioController = TextEditingController();
   String? _displayErrorText;
   String? _bioErrorText;
   bool isLoading = false;
@@ -29,10 +29,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void getUser() async {
     setState(() => isLoading = true);
 
-    final doc = await userDB.doc(widget.currentUserId).get();
+    final doc = await userDB.doc(currentUser!.id).get();
     _user = User.fromDocument(doc);
     _displayNameController.text = _user.username;
-    _bioController.text = _user.boi;
 
     setState(() => isLoading = false);
   }
@@ -40,7 +39,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // ignore: non_constant_identifier_names
   void UpdateProfile() {
     _displayErrorText = null;
-    _bioErrorText = null;
     final String displayName = _displayNameController.text.trim();
     if (displayName.length < 3 || displayName.isEmpty) {
       _displayErrorText = 'Ko\'rsatilgan nom qisqa';
@@ -48,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() {});
     if (_displayErrorText == null && _bioErrorText == null) {
-      userDB.doc(widget.currentUserId).update(
+      userDB.doc(currentUser!.id).update(
         {
           'username': displayName,
         },
@@ -179,19 +177,3 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
-
-
-// class DropDownWidget extends StatefulWidget {
-//  const  DropDownWidget({super.key});
-
-//   @override
-//   State<DropDownWidget> createState() => _DropDownWidgetState();
-// }
-
-// class _DropDownWidgetState extends State<DropDownWidget> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return 
-//   }
-// }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_fire/domain/entity/user.dart';
+import 'package:flutter_firebase_fire/ui/screens/activity/is_admin.dart';
 import 'package:flutter_firebase_fire/ui/screens/callan/callan.dart';
 import 'package:flutter_firebase_fire/ui/screens/home/callan_location.dart';
 import 'package:flutter_firebase_fire/ui/screens/home/carousel_item.dart';
@@ -10,8 +11,6 @@ import 'package:flutter_firebase_fire/ui/screens/home/home_header.dart';
 import 'package:flutter_firebase_fire/ui/screens/home/insta_ele.dart';
 import 'package:flutter_firebase_fire/ui/screens/home/telefon.dart';
 import 'package:flutter_firebase_fire/ui/screens/homescreen.dart';
-import 'package:flutter_firebase_fire/ui/screens/search/editprofile/edit_profile_screen.dart';
-import 'package:flutter_firebase_fire/ui/widgets/posts_list/2me.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({
@@ -50,38 +49,10 @@ class _HomeBodyState extends State<HomeBody> {
                         ),
                       ),
                       Text(
-                        currentUser!.username,
+                        widget.user.username,
                         style: const TextStyle(fontSize: 20.0),
                       ),
                       const Spacer(),
-                      IconButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditProfileScreen(
-                                  currentUserId: currentUser!.id)),
-                        ),
-                        icon: const Icon(Icons.settings),
-                      ),
-                      if (currentUser!.admin == true)
-                        ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.white),
-                          ),
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => UploadImage(
-                                currentUser: currentUser,
-                              ),
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.photo_camera,
-                            color: Colors.black,
-                          ),
-                        ),
                     ],
                   ),
                   const SizedBox(
@@ -155,7 +126,7 @@ class _HomeBodyState extends State<HomeBody> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ChatCallan()),
+                                builder: (context) => const ChatCallan()),
                           ),
                           child: HomeHeader(
                             title: 'News',
@@ -178,25 +149,19 @@ class _HomeBodyState extends State<HomeBody> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: CarouselSlider(
-                items: [
-                  CarouselItem(),
+                items: const [
+                  CarouselItemTwo(),
                   CarouselItem(),
                   CarouselItem(),
                 ],
                 options: CarouselOptions(
-                  height: 200,
-                  aspectRatio: 16 / 7.5,
-                  viewportFraction: 0.8,
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 3),
-                  autoPlayAnimationDuration: const Duration(seconds: 1),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  enlargeFactor: 0.3,
-                ),
+                    reverse: true,
+                    enlargeCenterPage: true,
+                    autoPlayInterval: const Duration(seconds: 3),
+                    autoPlay: true,
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 1000),
+                    aspectRatio: 13 / 8),
               ),
             ),
             const Row(
@@ -211,17 +176,71 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
               ],
             ),
-            const SingleChildScrollView(
+            SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  TelefonCallan(),
-                  CallanLocation(),
-                  InastaTele(),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const TelefonCallan(),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const CallanLocation(),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const InastaTele(),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  if (currentUser!.teacher == true) const Baholash(),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class Baholash extends StatelessWidget {
+  const Baholash({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const IsAdmin(),
+        ),
+      ),
+      child: Container(
+        width: 70,
+        height: 70,
+        margin: const EdgeInsets.only(
+            left: 15.0, right: 15.0, bottom: 15.0, top: 6.0),
+        decoration: BoxDecoration(
+          color: Colors.pink,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(3, 3),
+              blurRadius: 6,
+              spreadRadius: 3,
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.filter_drama_rounded,
+          size: 55.0,
+          color: Colors.white,
         ),
       ),
     );

@@ -11,6 +11,18 @@ import 'package:timeago/timeago.dart' as timeago;
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
 
+  List chatLeadingListColor = [
+    Colors.amber,
+    Colors.red,
+    Colors.green,
+    Colors.pink,
+  ];
+  List chatLeadingListWidget = [
+    const Icon(Icons.code_outlined, color: Colors.white),
+    const Icon(Icons.ac_unit_rounded, color: Colors.white),
+    const Icon(Icons.airplanemode_on_rounded, color: Colors.white),
+    const Icon(Icons.architecture, color: Colors.white),
+  ];
   List chatList = [
     const Dasturlash(),
     const IngilizTili(),
@@ -24,6 +36,7 @@ class ChatScreen extends StatelessWidget {
     'Rus tili',
     'Arab tili',
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +75,10 @@ class ChatScreen extends StatelessWidget {
                           builder: (context) => chatList[index],
                         ),
                       ),
-                      leading: const CircleAvatar(),
+                      leading: ChatLeading(
+                        color: chatLeadingListColor[index],
+                        icon: chatLeadingListWidget[index],
+                      ),
                       title: Text(chatListName[index]),
                     ),
                   ),
@@ -72,6 +88,26 @@ class ChatScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class ChatLeading extends StatelessWidget {
+  Color color;
+  Widget icon;
+
+  ChatLeading({
+    required this.color,
+    required this.icon,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: color,
+      child: icon,
     );
   }
 }

@@ -16,7 +16,7 @@ final activityDB = FirebaseFirestore.instance.collection('feed');
 final followersDB = FirebaseFirestore.instance.collection('followers');
 final followingDB = FirebaseFirestore.instance.collection('following');
 final chatDB = FirebaseFirestore.instance.collection('chat');
-
+String? selectedValue;
 User? currentUser;
 
 class HomeScreen extends StatefulWidget {
@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final username = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (contaxt) => CreateUser(),
+            builder: (contaxt) => const CreateUser(),
           ),
         );
 
@@ -80,11 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
               'username': username,
               'photoUrl': user.photoUrl,
               'email': user.email,
-              'displayName': user.displayName,
-              'bio': '',
               'score': 5,
               'tolov': 'To\'langan',
               'admin': false,
+              'group': selectedValue,
+              'teacher': false,
             },
           );
           doc = await userDB.doc(user.id).get();

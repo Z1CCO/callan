@@ -4,7 +4,6 @@ class Post {
   final String postId;
   final String ownerId;
   final String username;
-  final String location;
   final String description;
   final String mediaUrl;
   final dynamic likes;
@@ -13,7 +12,6 @@ class Post {
     required this.postId,
     required this.ownerId,
     required this.username,
-    required this.location,
     required this.description,
     required this.mediaUrl,
     required this.likes,
@@ -23,7 +21,6 @@ class Post {
       postId: doc['postId'],
       ownerId: doc['ownerId'],
       username: doc['username'],
-      location: doc['location'],
       description: doc['description'],
       mediaUrl: doc['mediaUrl'],
       likes: doc['likes'],

@@ -24,7 +24,7 @@ class Authenticated extends StatelessWidget {
       backgroundColor: Colors.white,
       body: _screens.elementAt(currentIndex),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(bottom: 10.0),
         child: cupertinoNavBar(
           currentIndex: currentIndex,
           onTap: onTap,
